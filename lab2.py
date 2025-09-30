@@ -19,11 +19,11 @@ def composite_simpson(f, a, b, N):
     integral = h / 3 * (fx[0] + 4 * sum(fx[1:N:2]) + 2 * sum(fx[2:N:2]) + fx[N])
     return integral
 
-def runge_rule(I_h, I_2h, p):
-    error = (I_h - I_2h) / (2**p - 1)
-    exact = I_h + error
+def runge_rule(J_h, J_2h, p):
+    Chp = (J_h - J_2h) / (2**p - 1)
+    J = J_h + Chp
 
-    return error, exact
+    return Chp, J
 
 a = 0.6
 b = 1.4
@@ -38,14 +38,16 @@ trap_error, trap_exact = runge_rule(trap_result, trap_result_2h, 2)
 simp_error, simp_exact = runge_rule(simp_result, simp_result_2h, 4)
 
 print(f"Формула трапеций:")
-print(f"    I_h: {trap_result}")
-print(f"    I_2h: {trap_result_2h}")
+print(f"    J_h: {trap_result}")
+print(f"    J_2h: {trap_result_2h}")
 print(f"    Точное решение: {trap_exact}\n")
-print(f"    Погрешность по Рунге: {trap_error}\n")
+print(f"    Погрешность по Рунге: {trap_error}")
+print(f"    Погрешность J - J_h: {trap_exact - trap_result}\n")
 
 
 print(f"Формула Симпсона:")
-print(f"    I_h: {simp_result}")
-print(f"    I_2h: {simp_result_2h}")
+print(f"    J_h: {simp_result}")
+print(f"    J_2h: {simp_result_2h}")
 print(f"    Точное решение: {simp_exact}\n")
-print(f"    Погрешность по Рунге: {simp_error}\n")
+print(f"    Погрешность по Рунге: {simp_error}")
+print(f"    Погрешность J - J_h: {simp_exact - simp_result}\n")
