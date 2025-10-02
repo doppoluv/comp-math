@@ -98,4 +98,4 @@ print(f"    Точное решение: {simp_exact_2}")
 print(f"    Погрешность: {simp_error_2}\n")
 
 segments = find_sign_changes(f, a, b, N)
-print("Подотрезки:", [(f"{seg_a}", f"{seg_b}") for seg_a, seg_b in segments])
+print("Подотрезки:", [(seg_a, seg_b) for seg_a, seg_b in segments])
