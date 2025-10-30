@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 def df(f, x, h=1e-8):
     return (f(x + h) - f(x - h)) / (2 * h)
 
-def separate_roots(f, a, b, n=100):
+def separate_roots(f, a, b, n=1000):
     x = np.linspace(a, b, n + 1)
     intervals = []
     
@@ -39,7 +39,7 @@ def refine_separation(f, intervals, max_iter=1000):
     
     return result
 
-def find_root_intervals(f, a=0, b=1, n=100):
+def find_root_intervals(f, a=0, b=1, n=1000):
     intervals = separate_roots(f, a, b, n)
     root_intervals = refine_separation(f, intervals)
     return root_intervals
@@ -64,7 +64,6 @@ def bisection(f, a, b, eps=1e-8):
             a = c
     
     return (a + b) / 2, iter_count
-
 
 def newton(f, a, b, eps=1e-8, max_iter=1000):
     x = (a + b) / 2
@@ -91,7 +90,6 @@ def newton(f, a, b, eps=1e-8, max_iter=1000):
     
     return x, iter_count
 
-
 def secant(f, a, b, eps=1e-8, max_iter=1000):
     x0, x1 = a, b
     iter_count = 0
@@ -115,6 +113,9 @@ def secant(f, a, b, eps=1e-8, max_iter=1000):
         x0, x1 = x1, x2
     
     return x1, iter_count
+
+
+
 
 
 def refine_roots(f, intervals, eps=1e-8):
@@ -150,11 +151,6 @@ def print_results(results, f):
             fx = f(root)
             print(f"{method_name:<30} {root:<30} {fx:<30.5e} {iters:<10}")
 
-
-
-
-
-
 def plot_function_and_roots(f, a, b, results, title):
     x = np.linspace(a, b, 1000)
     y = np.array([f(xi) for xi in x])
@@ -172,11 +168,11 @@ def plot_function_and_roots(f, a, b, results, title):
     for method_key in ['bisection', 'newton', 'secant']:
         roots = [res[method_key]['root'] for res in results]
         plt.scatter(roots, [0]*len(roots), 
-                   color=colors[method_key], 
-                   marker=markers[method_key], 
-                   s=100, 
-                   label=labels[method_key],
-                   zorder=5)
+                    color=colors[method_key], 
+                    marker=markers[method_key], 
+                    s=100, 
+                    label=labels[method_key],
+                    zorder=5)
     
     plt.xlabel('x', fontsize=12)
     plt.ylabel('f(x)', fontsize=12)
@@ -185,13 +181,18 @@ def plot_function_and_roots(f, a, b, results, title):
     plt.tight_layout()
     plt.show()
 
+
+
+
+
+
 a = -7
 b = 3
 
 def f1(x):
     return 5**x - 6*x - 3
 
-root_intervals = find_root_intervals(f1, a, b, 100)
+root_intervals = find_root_intervals(f1, a, b, 1000)
 print(f"\nНайдено отрезков: {len(root_intervals)}")
 results = refine_roots(f1, root_intervals)
 print_results(results, f1)
@@ -205,7 +206,7 @@ print("="*110)
 def f2(x):
     return x**4 - x**3 - 2*x**2 + 3*x - 3
 
-root_intervals = find_root_intervals(f2, a, b, 100)
+root_intervals = find_root_intervals(f2, a, b, 1000)
 print(f"\nНайдено отрезков: {len(root_intervals)}")
 results = refine_roots(f2, root_intervals)
 print_results(results, f2)
@@ -219,7 +220,7 @@ print("="*110)
 def f3(x):
     return 2*x**2 - 0.5**x - 3
 
-root_intervals = find_root_intervals(f3, a, b, 100)
+root_intervals = find_root_intervals(f3, a, b, 1000)
 print(f"\nНайдено отрезков: {len(root_intervals)}")
 results = refine_roots(f3, root_intervals)
 print_results(results, f3)
@@ -233,7 +234,7 @@ print("="*110)
 def f4(x):
     return x * np.log10(x + 1) - 1
 
-root_intervals = find_root_intervals(f4, a, b, 100)
+root_intervals = find_root_intervals(f4, a, b, 1000)
 print(f"\nНайдено отрезков: {len(root_intervals)}")
 results = refine_roots(f4, root_intervals)
 print_results(results, f4)
