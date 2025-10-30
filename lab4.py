@@ -139,16 +139,16 @@ def print_results(results, f):
     for res in results:
         print(f"\nКОРЕНЬ #{res['num']}:")
         print(f"Отрезок: [{res['interval'][0]}, {res['interval'][1]}]")
-        print("-" * 80)
+        print("-" * 110)
         
-        print(f"{'Метод':<20} {'Корень':<20} {'f(x)':<20} {'Итерации':<10}")
-        print("-" * 80)
+        print(f"{'Метод':<30} {'Корень':<30} {'f(x)':<30} {'Итерации':<10}")
+        print("-" * 110)
         
         for method_name, method_key in [('Бисекция', 'bisection'), ('Ньютона', 'newton'), ('Секущих', 'secant')]:
             root = res[method_key]['root']
             iters = res[method_key]['iters']
             fx = f(root)
-            print(f"{method_name:<20} {root:<20} {fx:<20.5e} {iters:<10}")
+            print(f"{method_name:<30} {root:<30} {fx:<30.5e} {iters:<10}")
 
 
 
@@ -159,7 +159,7 @@ def plot_function_and_roots(f, a, b, results, title):
     x = np.linspace(a, b, 1000)
     y = np.array([f(xi) for xi in x])
     
-    plt.figure(figsize=(12, 6))
+    plt.figure(figsize=(8, 4))
     
     plt.plot(x, y, 'b-', linewidth=2, label='f(x)')
     plt.axhline(y=0, color='k', linestyle='--', linewidth=0.5, alpha=0.3)
@@ -199,7 +199,7 @@ plot_function_and_roots(f1, a, b, results, 'f(x) = 5**x - 6*x - 3')
 
 
 print("\n")
-print("="*80)
+print("="*110)
 
 
 def f2(x):
@@ -213,7 +213,7 @@ plot_function_and_roots(f2, a, b, results, 'f(x) = x**4 - x**3 - 2*x**2 + 3*x - 
 
 
 print("\n")
-print("="*80)
+print("="*110)
 
 
 def f3(x):
@@ -227,7 +227,7 @@ plot_function_and_roots(f3, a, b, results, 'f(x) = 2*x**2 - 0.5**x - 3')
 
 
 print("\n")
-print("="*80)
+print("="*110)
 
 
 def f4(x):
