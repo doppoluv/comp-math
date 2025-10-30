@@ -7,12 +7,14 @@ def df(f, x, h=1e-8):
 def separate_roots(f, a, b, n=1000):
     x = np.linspace(a, b, n + 1)
     intervals = []
-    
+    roots = []
     for i in range(n):
+        if f(x[i + 1]) == 0:
+            roots.append(x[i + 1]) 
         if f(x[i]) * f(x[i + 1]) < 0:
             intervals.append([x[i], x[i + 1]])
-    
-    return intervals
+    print(intervals)
+    return intervals, roots
 
 def refine_separation(f, intervals, max_iter=1000):
     result = []
@@ -38,9 +40,9 @@ def refine_separation(f, intervals, max_iter=1000):
     return result
 
 def find_root_intervals(f, a=0, b=1, n=1000):
-    intervals = separate_roots(f, a, b, n)
+    intervals, roots = separate_roots(f, a, b, n)
     root_intervals = refine_separation(f, intervals)
-    return root_intervals
+    return root_intervals, roots
 
 
 
@@ -237,3 +239,22 @@ print(f"\nНайдено отрезков: {len(root_intervals)}")
 results = refine_roots(f4, root_intervals)
 print_results(results, f4)
 plot_function_and_roots(f4, a, b, results, 'f(x) = x * np.log10(x + 1) - 1')
+
+
+
+
+
+l = 7.8
+a = -l
+b = l
+
+def f5(x):
+    return x - l*np.sin(x)
+
+root_intervals, roots = find_root_intervals(f5, a, b, 1001)
+print(f"\nНайдено отрезков: {len(root_intervals)}")
+if len(roots) != 0:
+    print(f"Корни на границах интервалов: {roots}")
+results = refine_roots(f5, root_intervals)
+print_results(results, f5)
+plot_function_and_roots(f5, a, b, results, 'f(x) = x - l*np.sin(x)')
