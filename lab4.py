@@ -8,7 +8,6 @@ def separate_roots(f, a, b, n=1000):
     x = np.linspace(a, b, n + 1)
     intervals = []
     
-    # Ищем отрезки со сменой знака
     for i in range(n):
         if f(x[i]) * f(x[i + 1]) < 0:
             intervals.append([x[i], x[i + 1]])
@@ -23,7 +22,6 @@ def refine_separation(f, intervals, max_iter=1000):
         x_test = np.linspace(a, b, 20)
         df_vals = [df(f, x) for x in x_test]
         
-        # Если производная сохраняет знак - корень единственный
         if all(v > 0 for v in df_vals) or all(v < 0 for v in df_vals):
             result.append([a, b])
         else:
