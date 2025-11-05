@@ -4,8 +4,11 @@ def cubic_function(x, a, b, c, d):
     return a * x ** 3 + b * x ** 2 + c * x + d
 
 def find_root_bounds(a, b, c, d):
+    if a == 0:
+        raise ValueError("a не должен быть равен нулю")
+
     A = max(abs(b), abs(c), abs(d))
-    R = 1 + A / abs(a) if a != 0 else 0
+    R = 1 + A / abs(a)
 
     B = max(abs(a), abs(b), abs(c))
     r = 1 / (1 + B / abs(d)) if d != 0 else 0
@@ -15,12 +18,15 @@ def find_root_bounds(a, b, c, d):
 def separate_roots(f, a, b, n=10000):
     x = np.linspace(a, b, n + 1)
     intervals = []
+    roots = []
 
     for i in range(n):
-        if f(x[i]) * f(x[i + 1]) <= 0:
+        if f(x[i + 1]) == 0:
+            roots.append(x[i + 1])
+        if f(x[i]) * f(x[i + 1]) < 0:
             intervals.append([x[i], x[i + 1]])
 
-    return intervals
+    return intervals, roots
 
 def bisection_method(f, a, b, eps=1e-8):
     iter_count = 0
@@ -54,10 +60,11 @@ def analyze_cubic_equation(a, b, c, d):
         return cubic_function(x, a, b, c, d)
 
     search_interval1 = [-R, -r]
-    intervals1 = separate_roots(f, search_interval1[0], search_interval1[1])
+    intervals1, roots1 = separate_roots(f, search_interval1[0], search_interval1[1])
     search_interval2 = [r, R]
-    intervals2 = separate_roots(f, search_interval2[0], search_interval2[1])
+    intervals2, roots2 = separate_roots(f, search_interval2[0], search_interval2[1])
     intervals = intervals1 + intervals2
+    roots_cur = roots1 + roots2
 
     print(f"\n2. Отделение корней методом бисекции:")
     print(f"   Найдено интервалов с корнями: {len(intervals)}")
@@ -67,7 +74,7 @@ def analyze_cubic_equation(a, b, c, d):
 
     print(f"\n3. Уточнение корней методом бисекции:")
     print("-" * 70)
-    print(f"{'№':<3} {'Корень':<25} {'f(корень)':<25} {'Итерации':<10}")
+    print(f"{'№':<3} {'x':<25} {'f(x)':<25} {'Итерации':<10}")
     print("-" * 70)
 
     roots = []
@@ -75,9 +82,12 @@ def analyze_cubic_equation(a, b, c, d):
         root, iterations = bisection_method(f, interval[0], interval[1])
         roots.append(root)
         print(f"{i:<3} {root:<25.8f} {f(root):<25.2e} {iterations:<10}")
+    print(f"   Найдено точных корней: {len(roots_cur)}")
+    for i, root in enumerate(roots_cur, 1):
+        print(f"{i:<3} {root:<25.8f} {f(root):<25.2e} {0:<10}")
 
 
 
 
-a3, b3, c3, d3 = 2, -3, -1, 1
+a3, b3, c3, d3 = 1, 2, -1, 0
 analyze_cubic_equation(a3, b3, c3, d3)
