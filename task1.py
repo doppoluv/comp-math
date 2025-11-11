@@ -1,7 +1,7 @@
 import numpy as np
 
 def cubic_function(x, a, b, c, d):
-    return a * x  3 + b * x  2 + c * x + d
+    return a * x**3 + b * x**2 + c * x + d
 
 def find_root_bounds(a, b, c, d):
     if a == 0:
@@ -120,5 +120,5 @@ def analyze_cubic_equation(a, b, c, d):
     for i, root in enumerate(roots_cur, 1):
         print(f"{i:<3} {root:<25.8f} {f(root):<25.2e} {0:<10}")
 
-a3, b3, c3, d3 = 1, 2, -1, 0
+a3, b3, c3, d3 = 1, 3, 3, 1
 analyze_cubic_equation(a3, b3, c3, d3)
