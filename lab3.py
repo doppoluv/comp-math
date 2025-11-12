@@ -37,7 +37,7 @@ def backward_substitution(U, y):
     return x
 
 
-def jacobi(A, b, eps=1e-6, max_iter=10000):
+def jacobi(A, b, eps=1e-8, max_iter=10000):
     n = len(b)
     x = np.zeros(n)
     
@@ -57,7 +57,7 @@ def jacobi(A, b, eps=1e-6, max_iter=10000):
     return x
 
 
-def gauss_seidel(A, b, eps=1e-6, max_iter=10000):
+def gauss_seidel(A, b, eps=1e-8, max_iter=10000):
     n = len(b)
     x = np.zeros(n)
     
