@@ -8,8 +8,10 @@ def lu_decomposition(A):
     for i in range(n):
         for j in range(i, n):
             U[i, j] = A[i, j] - sum(L[i, k] * U[k, j] for k in range(i))
+
         for j in range(i + 1, n):
             L[j, i] = (A[j, i] - sum(L[j, k] * U[k, i] for k in range(i))) / U[i, i]
+
     return L, U
 
 
@@ -20,6 +22,7 @@ def forward_substitution(L, b):
 
     for i in range(n):
         y[i] = (b[i] - sum(L[i, j] * y[j] for j in range(i))) / L[i, i]
+
     return y
 
 
@@ -30,38 +33,45 @@ def backward_substitution(U, y):
 
     for i in range(n - 1, -1, -1):
         x[i] = (y[i] - sum(U[i, j] * x[j] for j in range(i + 1, n))) / U[i, i]
+
     return x
 
 
-def jacobi(A, b, tol=1e-6, max_iter=10000):
+def jacobi(A, b, eps=1e-6, max_iter=10000):
     n = len(b)
     x = np.zeros(n)
-    D = np.diag(np.diag(A))
-    R = A - D
-    D_inv = np.diag(1 / np.diag(A))
-
-    for _ in range(max_iter):
-        x_new = D_inv @ (b - R @ x)
-        if np.linalg.norm(x_new - x) < tol:
+    
+    for k in range(max_iter):
+        x_new = np.zeros(n)
+        
+        for i in range(n):
+            sum_j = sum(A[i, j] * x[j] for j in range(n) if j != i)
+            x_new[i] = (b[i] - sum_j) / A[i, i]
+        
+        if np.linalg.norm(x_new - x) < eps:
             return x_new
+        
         x = x_new
+    
     print("Максимальное число итераций в Якоби")
     return x
 
 
-def gauss_seidel(A, b, tol=1e-6, max_iter=10000):
+def gauss_seidel(A, b, eps=1e-6, max_iter=10000):
     n = len(b)
     x = np.zeros(n)
-
-    for _ in range(max_iter):
-        x_new = x.copy()
+    
+    for k in range(max_iter):
+        x_old = x.copy()
+        
         for i in range(n):
-            s1 = sum(A[i, j] * x_new[j] for j in range(i))
-            s2 = sum(A[i, j] * x[j] for j in range(i + 1, n))
-            x_new[i] = (b[i] - s1 - s2) / A[i, i]
-        if np.linalg.norm(x_new - x) < tol:
-            return x_new
-        x = x_new
+            sum1 = sum(A[i, j] * x[j] for j in range(i))
+            sum2 = sum(A[i, j] * x_old[j] for j in range(i + 1, n))
+            x[i] = (b[i] - sum1 - sum2) / A[i, i]
+
+        if np.linalg.norm(x - x_old) < eps:
+            return x
+    
     print("Максимальное число итераций в Гауссе-Зейделе")
     return x
 
@@ -88,6 +98,7 @@ def thomas_algorithm(A, b):
     x[-1] = beta[-1]
     for i in range(n - 2, -1, -1):
         x[i] = beta[i] + alpha[i] * x[i + 1]
+
     return x
 
 
