@@ -1,17 +1,31 @@
 import numpy as np
+import warnings
+
+warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 def lu_decomposition(A):
-    n = len(A)
-    L = np.eye(n)  
-    U = np.zeros((n, n))
+    n = A.shape[0]
+    A = A.copy()
+    L = np.eye(n)
 
-    for i in range(n):
-        for j in range(i, n):
-            U[i, j] = A[i, j] - sum(L[i, k] * U[k, j] for k in range(i))
+    for k in range(n-1):
+        if abs(A[k, k]) < 1e-12:
+            raise ValueError(f"A[{k},{k}] = {A[k,k]}")
 
-        for j in range(i + 1, n):
-            L[j, i] = (A[j, i] - sum(L[j, k] * U[k, i] for k in range(i))) / U[i, i]
+        for i in range(k+1, n):
+            l_ik = A[i, k] / A[k, k]
+            L[i, k] = l_ik
+            
+            print(f"l_{i+1}{k+1} = a_{i+1}{k+1} / a_{k+1}{k+1} = {A[i,k]:.3f} / {A[k,k]:.3f} = {l_ik:.3f}")
+            
+            for j in range(k, n):
+                A[i, j] = A[i, j] - l_ik * A[k, j]
 
+        print(f"  Матрица после шага {k+1}:")
+        print(np.array2string(A, precision=3, suppress_small=True))
+        print()
+
+    U = A.copy()
     return L, U
 
 
@@ -144,15 +158,15 @@ for k in norm_types:
     print(f"     ||U||_{k} = {norm_U:.6f},  ν_{k}(U) = {cond_U:.6f}")
 
 print("\nРешения системы Ax = b:")
-print(f"   LU-разложение:        {x_lu}")
+print(f"   LU-разложение:  {x_lu}")
 print(f"   Якоби:          {x_jacobi}")
-print(f"   Гаусс-Зейдель:        {x_gs}")
+print(f"   Гаусс-Зейдель:  {x_gs}")
 # print(f"   Прогонка:       {x_thomas}")
 
 print("\nПроверка решений (||Ax - b||):")
-print(f"   LU:{check_solution(x_lu, A, b):.2e}")
-print(f"   Якоби:        {check_solution(x_jacobi, A, b):.2e}")
-print(f"   Гаусс-Зейдель:{check_solution(x_gs, A, b):.2e}")
+print(f"   LU:             {check_solution(x_lu, A, b):.2e}")
+print(f"   Якоби:          {check_solution(x_jacobi, A, b):.2e}")
+print(f"   Гаусс-Зейдель:  {check_solution(x_gs, A, b):.2e}")
 # print(f"   Прогонка:     {check_solution(x_thomas, A, b):.2e}")
 
 x_exact = np.linalg.solve(A, b)
