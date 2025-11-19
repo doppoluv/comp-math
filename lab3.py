@@ -121,7 +121,13 @@ def check_solution(x, A, b):
     return np.linalg.norm(residual)
 
 
-
+# A = np.array([
+#     [2, -1, 0, 0],
+#     [-1, 3, -1, 0],
+#     [0, -1, 3, -1],
+#     [0, 0, -1, 2]
+# ], dtype=float)
+# b = np.array([1, 2, 3, 4], dtype=float)
 A = np.array([
     [8.2, -3.2, 14.2, 14.8],
     [5.6, -12.0, 15.0, -6.4],
