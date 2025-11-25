@@ -15,7 +15,7 @@ def generate_data(a, b, N):
     i = np.arange(N + 1)
     xi = np.cos((2 * i + 1) * np.pi / (2 * (N + 1)))
     fi = f(xi)
-    
+
     return xi, fi
 
 def lagrange_interpolation(x, xi, fi):
@@ -74,24 +74,24 @@ def eval_spline(x, xi, a, b, c, d):
 
 def plot_interpolation(a, b, N, num_points=1000):
     xi, fi = generate_data(a, b, N)
-    
+
     print(f"Таблица для N={N}:")
     for i in range(len(xi)):
         print(f"xi[{i}] = {xi[i]:.4f}, fi[{i}] = {fi[i]:.4f}")
     print("\n")
-    
+
     x_eval = np.linspace(a, b, num_points)
-  
+
     y_original = f(x_eval)
-    
+
     y_lagrange = np.array([lagrange_interpolation(x, xi, fi) for x in x_eval])
-    
+
     # a, b, c, d = cubic_spline(xi, fi)
     # y_spline_manual = np.array([eval_spline(x, xi, a, b, c, d) for x in x_eval])
-    
+
     # cs = CubicSpline(xi, fi, bc_type='natural')
     # y_spline_lib = cs(x_eval)
-    
+
 
 
     err_l = np.abs(y_lagrange - y_original)

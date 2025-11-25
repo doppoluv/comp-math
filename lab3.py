@@ -15,9 +15,9 @@ def lu_decomposition(A):
         for i in range(k+1, n):
             l_ik = A[i, k] / A[k, k]
             L[i, k] = l_ik
-            
+
             print(f"l_{i+1}{k+1} = a_{i+1}{k+1} / a_{k+1}{k+1} = {A[i,k]:.3f} / {A[k,k]:.3f} = {l_ik:.3f}")
-            
+
             for j in range(k, n):
                 A[i, j] = A[i, j] - l_ik * A[k, j]
 
@@ -54,19 +54,19 @@ def backward_substitution(U, y):
 def jacobi(A, b, eps=1e-8, max_iter=10000):
     n = len(b)
     x = np.zeros(n)
-    
+
     for k in range(max_iter):
         x_new = np.zeros(n)
-        
+
         for i in range(n):
             sum_j = sum(A[i, j] * x[j] for j in range(n) if j != i)
             x_new[i] = (b[i] - sum_j) / A[i, i]
-        
+
         if np.linalg.norm(x_new - x) < eps:
             return x_new
-        
+
         x = x_new
-    
+
     print("Максимальное число итераций в Якоби")
     return x
 
@@ -74,10 +74,10 @@ def jacobi(A, b, eps=1e-8, max_iter=10000):
 def gauss_seidel(A, b, eps=1e-8, max_iter=10000):
     n = len(b)
     x = np.zeros(n)
-    
+
     for k in range(max_iter):
         x_old = x.copy()
-        
+
         for i in range(n):
             sum1 = sum(A[i, j] * x[j] for j in range(i))
             sum2 = sum(A[i, j] * x_old[j] for j in range(i + 1, n))
@@ -85,7 +85,7 @@ def gauss_seidel(A, b, eps=1e-8, max_iter=10000):
 
         if np.linalg.norm(x - x_old) < eps:
             return x
-    
+
     print("Максимальное число итераций в Гауссе-Зейделе")
     return x
 
