@@ -131,6 +131,65 @@ def plot_schemes(y0=-1.0, T=6.0, N=120):
     plt.legend(); plt.grid(True,which='both',alpha=0.4)
     plt.tight_layout(); plt.show()
 
+def runge_analysis_along_grid(y0=-1.0, T=6.0, N_coarse=60):
+    f = lambda y: -y
+    Ns = [N_coarse, 2*N_coarse, 4*N_coarse]
+    x_fine = np.linspace(0, T, Ns[2]+1)
+
+    methods = [
+        ("Эйлера", euler, 1, 'r--'),
+        ("RK2", rk2, 2, 'b-.'),
+        ("RK4", rk4, 4, 'g-')
+    ]
+
+    plt.figure(figsize=(13, 9))
+
+    for name, method, p_th, style in methods:
+        x_h  = np.linspace(0, T, Ns[0]+1)
+        x_h2 = np.linspace(0, T, Ns[1]+1)
+        x_h4 = x_fine
+
+        y_h  = method(f, y0, x_h)
+        y_h2 = method(f, y0, x_h2)
+        y_h4 = method(f, y0, x_h4)
+
+        y_coarse = y_h
+        y_mid    = y_h2[::2]
+        y_fine   = y_h4[::4]
+
+        err_runge = np.abs(y_coarse - y_mid) / (2**p_th - 1)
+
+        num = np.abs(y_coarse - y_mid)
+        den = np.abs(y_mid - y_fine)
+        p_observed = np.full_like(err_runge, np.nan)
+        mask = den > 1e-15
+        p_observed[mask] = np.log2(num[mask] / den[mask])
+
+        plt.subplot(2, 1, 1)
+        plt.semilogy(x_h, err_runge, style, linewidth=2.2, label=f'{name}')
+
+        plt.subplot(2, 1, 2)
+        plt.plot(x_h, p_observed, style, linewidth=2.2, label=f'{name}')
+
+    plt.subplot(2, 1, 1)
+    plt.title('Погрешности в каждом узле')
+    plt.ylabel('Оценка')
+    plt.grid(True, which="both", ls="--", alpha=0.5)
+    plt.legend(fontsize=11)
+
+    plt.subplot(2, 1, 2)
+    plt.title('Порядок в каждом узле')
+    plt.xlabel('$x$')
+    plt.ylabel('$p(x_n)$')
+    plt.ylim(0, 5)
+    plt.axhline(1, color='gray', linestyle=':', alpha=0.7)
+    plt.axhline(2, color='gray', linestyle=':', alpha=0.7)
+    plt.axhline(4, color='gray', linestyle=':', alpha=0.7)
+    plt.grid(True, ls="--", alpha=0.5)
+    plt.legend(fontsize=11)
+
+    plt.tight_layout()
+    plt.show()
 
 
 
@@ -138,3 +197,5 @@ def plot_schemes(y0=-1.0, T=6.0, N=120):
 check_stability_by_lax(y0=-1.0, T=5.0, N=120)
 numeric_order(y0=-1.0, T=5.0, N0=60)
 plot_schemes(y0=-1.0, T=5.0, N=120)
+
+runge_analysis_along_grid(y0=-1.0, T=5.0, N_coarse=60)
